@@ -39,10 +39,9 @@ install:
   - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY_PRODUCTION}
   - AWS_DEFAULT_REGION=${AWS_REGION}
 
-.deploy_script: &deploy_script
-  script:
-    - serverless deploy -s ${ENVIRONMENT} -r ${AWS_REGION}
-    - cd -
+.deploy_script: &deploy_script |-
+    serverless deploy -s ${ENVIRONMENT} -r ${AWS_REGION}
+    cd -
 
 .deploy: &deploy
   script:
