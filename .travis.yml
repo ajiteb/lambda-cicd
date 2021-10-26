@@ -63,6 +63,4 @@ jobs:
       name: Deploy to feature env
       if: type = pull_request AND (head_branch =~ ^bug/ OR head_branch =~ ^chore/ OR head_branch =~ ^feature/) AND branch = master
       env: *feature_env
-      provider: script
-      script:
-        - *deploy
+      <<: *deploy
