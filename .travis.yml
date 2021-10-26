@@ -50,6 +50,17 @@ install:
     - cd create-post
     - *deploy_script
 
+.undeploy_script: &undeploy_script |-
+    serverless remove -s ${ENVIRONMENT} -r ${AWS_REGION}
+    cd -
+
+.undeploy: &undeploy
+  script:
+    - cd init-user
+    - *deploy_script
+    - cd create-post
+    - *deploy_script
+
 jobs:
   include:
     - stage: test
@@ -64,3 +75,21 @@ jobs:
       if: type = pull_request AND (head_branch =~ ^bug/ OR head_branch =~ ^chore/ OR head_branch =~ ^feature/) AND branch = master
       env: *feature_env
       <<: *deploy
+    
+    # - stage: deploy
+    #   name: Deploy to staging env
+    #   if: branch = master AND type = push
+    #   env: *staging_env
+    #   <<: *deploy
+    
+    # - stage: deploy
+    #   name: Deploy to production env
+    #   if: commit_message = deploy AND type = api
+    #   env: *production_env
+    #   <<: *deploy
+    
+    - stage: deploy
+      name: Uneploy from feature env
+      if: branch = master AND type = push
+      env: *feature_env
+      <<: *undeploy
