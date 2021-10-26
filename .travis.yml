@@ -39,6 +39,18 @@ install:
   - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY_PRODUCTION}
   - AWS_DEFAULT_REGION=${AWS_REGION}
 
+.deploy_script: &deploy_script
+  script:
+    - serverless deploy -s ${ENVIRONMENT} -r ${AWS_REGION}
+    - cd -
+
+.deploy: &deploy
+  script:
+    - cd init-user
+    - *deploy_script
+    - cd create-post
+    - *deploy_script
+
 jobs:
   include:
     - stage: test
@@ -54,19 +66,4 @@ jobs:
       env: *feature_env
       provider: script
       script:
-        - SERVICE_PATH="init-user"
-        - bash bin/deploy
-        - SERVICE_PATH="create-post"
-        - bash bin/deploy
-
-#       name: "Deploy User Init API"
-#       env:
-#         - SERVICE_PATH="init-user"
-#     -
-#       name: "Deploy Create Post API"
-#       env:
-#         - SERVICE_PATH="create-post"
-# deploy:
-#   provider: script
-#   script: bash bin/deploy
-#   if: branch = master AND type = push
+        - *deploy
