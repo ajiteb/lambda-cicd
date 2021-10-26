@@ -57,9 +57,9 @@ install:
 .undeploy: &undeploy
   script:
     - cd init-user
-    - *deploy_script
+    - *undeploy_script
     - cd create-post
-    - *deploy_script
+    - *undeploy_script
 
 jobs:
   include:
