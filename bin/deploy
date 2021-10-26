@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 cd ${SERVICE_PATH}
-serverless deploy -s ${ENVIRONMENT}
+serverless deploy -s ${ENVIRONMENT} -r ${AWS_REGION}
 cd -

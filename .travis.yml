@@ -13,8 +13,8 @@ install:
     - cd -
 
 .feature_env: &feature_env
-  - CLUSTER=staging
-  - ENVIRONMENT=testing
+  - CLUSTER=development
+  - ENVIRONMENT=development
   - TAG=${TRAVIS_COMMIT}
   - AWS_REGION=eu-west-1
   - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_DEVELOPMENT}
@@ -52,6 +52,7 @@ jobs:
       name: Deploy to feature env
       if: type = pull_request AND (head_branch =~ ^bug/ OR head_branch =~ ^chore/ OR head_branch =~ ^feature/) AND branch = master
       env: *feature_env
+      provider: script
       script:
         - SERVICE_PATH="init-user"
         - bash bin/deploy
