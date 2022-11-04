@@ -43,9 +43,11 @@ install:
 
 .deploy: &deploy
   script:
-    - cd init-user
-    - *deploy_script
-    - cd create-post
+    # - cd init-user
+    # - *deploy_script
+    # - cd create-post
+    # - *deploy_script
+    - cd vault-test
     - *deploy_script
 
 .undeploy_script: &undeploy_script |-
@@ -54,25 +56,27 @@ install:
 
 .undeploy: &undeploy
   script:
-    - cd init-user
-    - *undeploy_script
-    - cd create-post
+    # - cd init-user
+    # - *undeploy_script
+    # - cd create-post
+    # - *undeploy_script
+    - cd vault-test
     - *undeploy_script
 
 jobs:
   include:
-    - stage: test
-      name: Run tests
-      if: type = pull_request
-      env: *feature_env
-      script:
-        - yarn run jest
+    # - stage: test
+    #   name: Run tests
+    #   if: type = pull_request
+    #   env: *feature_env
+    #   script:
+    #     - yarn run jest
     
-    - stage: deploy
-      name: Deploy to feature env
-      if: type = pull_request AND (head_branch =~ ^bug/ OR head_branch =~ ^chore/ OR head_branch =~ ^feature/) AND branch = master
-      env: *feature_env
-      <<: *deploy
+    # - stage: deploy
+    #   name: Deploy to feature env
+    #   if: type = pull_request AND (head_branch =~ ^bug/ OR head_branch =~ ^chore/ OR head_branch =~ ^feature/) AND branch = master
+    #   env: *feature_env
+    #   <<: *deploy
     
     # - stage: deploy
     #   name: Deploy to staging env
@@ -80,14 +84,20 @@ jobs:
     #   env: *staging_env
     #   <<: *deploy
     
+    - stage: deploy
+      name: Deploy to production env
+      if: commit_message = deploy AND type = api
+      env: *production_env
+      <<: *deploy
+    
     # - stage: deploy
-    #   name: Deploy to production env
-    #   if: commit_message = deploy AND type = api
-    #   env: *production_env
-    #   <<: *deploy
+    #   name: Uneploy from feature env
+    #   if: branch = master AND type = push
+    #   env: *feature_env
+    #   <<: *undeploy
     
     - stage: deploy
-      name: Uneploy from feature env
-      if: branch = master AND type = push
-      env: *feature_env
+      name: Uneploy from production env
+      if: commit_message = undeploy AND type = api
+      env: *production_env
       <<: *undeploy
