@@ -3,13 +3,13 @@ provider:
   name: aws
   runtime: nodejs16.x
   iam:
-    role: arn:aws:iam::027755483893:role/service-role/financing-service-audit-table-backup-role-3yaszhsa
+    role: arn:aws:iam::027755483893:role/service-role/proposals-service-audit-table-backup-role-ilv91rl1
   environment:
     VAULT_ADDR: "https://vault.secfi.com"
-    VAULT_AUTH_ROLE: "financing-audit-backup"
+    VAULT_AUTH_ROLE: "proposals-audit-backup"
     VAULT_AUTH_PROVIDER: "aws"
-    VAULT_SECRET_PATH_DB: "database/creds/lambda-read-production-postgres"
-    VAULT_SECRET_FILE_DB: "/tmp/secret.json"
+    VAULT_SECRET_PATH: "kv/secret/production/backend/lambda"
+    VAULT_SECRET_FILE: "/tmp/secret.json"
     
 functions:
   hello:
